@@ -1,4 +1,4 @@
-package yk.socket;
+package yk.socket.browserServer;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;

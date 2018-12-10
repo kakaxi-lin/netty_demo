@@ -1,4 +1,4 @@
-package yk.socket;
+package yk.socket.config;
 
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;

@@ -1,4 +1,6 @@
-package yk.socket;
+package yk.socket.browserServer;
+
+import com.alibaba.fastjson.JSON;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -19,7 +21,10 @@ import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.util.CharsetUtil;
+import yk.socket.config.NettyConfig;
+import yk.socket.po.UserApp;
 
 public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 	private WebSocketServerHandshaker handshaker;
@@ -86,6 +91,9 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 		//获取客户端向服务端发送的消息
 		String request = ((TextWebSocketFrame) frame).text();
 		System.out.println("服务端收到客户端的消息====>>>" + request);
+		UserApp user=JSON.parseObject(request, UserApp.class);
+		System.out.println(user.getAppId());
+		System.out.println(user.getUserId());
 		TextWebSocketFrame tws = new TextWebSocketFrame("channel.id:" + ctx.channel().id() + " ===>>> " + request);
 //		ctx.writeAndFlush(tws);
 		System.out.println("当前channel_id:"+ctx.channel().id());
