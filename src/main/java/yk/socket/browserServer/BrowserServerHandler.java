@@ -48,6 +48,7 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 		// TODO Auto-generated method stub
 		System.out.println("客户端连接断开。。。");
 		NettyConfig.group.remove(ctx.channel());
+		tempUser.setChannelId(ctx.channel().id());
 		UserGroup.removeUsers(tempUser);
 		/*System.out.println("断开连接。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
 		System.out.println("channel个数。。"+NettyConfig.group.size());
@@ -127,11 +128,10 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 			u=new UserApp();
 			u.setUserId(user.getUserId());
 			u.setAppId(user.getAppId());
-			u.setChannelId(ctx.channel().id());
 			u.setChannelIdList(ctx.channel().id());
 			UserGroup.addUsers(u);
 		} else {
-			u.setChannelId(ctx.channel().id());
+			
 			u.setChannelIdList(ctx.channel().id());
 
 		}

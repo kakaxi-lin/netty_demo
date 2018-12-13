@@ -40,7 +40,10 @@ public class UserGroup {
 		user.getChannelIdList().remove(u.getChannelId());
 		if(user.getChannelIdList().size()==0){
 			cm.remove(u.getUserId());
-			NettyConfig.appUsers.remove(u.getAppId());
+			if(cm.size()==0){
+				NettyConfig.appUsers.remove(u.getAppId());
+			}
+			
 		}
 	}
 
