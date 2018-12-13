@@ -1,13 +1,16 @@
 package yk.socket.browserServer;
 
-import com.alibaba.fastjson.JSON;
+import java.util.List;
+import java.util.concurrent.ConcurrentMap;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelId;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
@@ -24,19 +27,20 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.util.CharsetUtil;
 import yk.socket.config.NettyConfig;
+import yk.socket.config.UserGroup;
 import yk.socket.po.UserApp;
 
 public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 	private WebSocketServerHandshaker handshaker;
 	private static final String WEB_SOCKET_URL = "ws://localhost:8888/websocket";
-
+	private UserApp tempUser;
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		System.out.println("客户端连接成功。。。");
 		NettyConfig.group.add(ctx.channel());
-		for(Channel a:NettyConfig.group){
+		/*for(Channel a:NettyConfig.group){
 			System.out.println(a.id());
-		}
+		}*/
 	}
 
 	@Override
@@ -44,9 +48,27 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 		// TODO Auto-generated method stub
 		System.out.println("客户端连接断开。。。");
 		NettyConfig.group.remove(ctx.channel());
+		UserGroup.removeUsers(tempUser);
+		/*System.out.println("断开连接。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");
+		System.out.println("channel个数。。"+NettyConfig.group.size());
 		for(Channel a:NettyConfig.group){
 			System.out.println(a.id());
 		}
+		System.out.println("-----------------------------");
+		System.out.println("appid个数。。"+NettyConfig.appUsers.size());
+		for( String key:NettyConfig.appUsers.keySet()){
+			System.out.println("key:"+key);
+			for(String key1:NettyConfig.appUsers.get(key).keySet()){
+				System.out.println("key1:"+key1);
+				UserApp xx = NettyConfig.appUsers.get(key).get(key1);
+				List<ChannelId> cc = xx.getChannelIdList();
+				for(ChannelId c:cc){
+					System.out.println("ChannelId..."+c);
+				}
+			}
+			
+		}
+		System.out.println("断开连接。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。。");*/
 	}
 
 	@Override
@@ -97,13 +119,42 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 		TextWebSocketFrame tws = new TextWebSocketFrame("channel.id:" + ctx.channel().id() + " ===>>> " + request);
 //		ctx.writeAndFlush(tws);
 		System.out.println("当前channel_id:"+ctx.channel().id());
-		ChannelGroup xx = NettyConfig.group;
-		System.out.println(xx.size());
-		for(Channel a:xx){
-			System.out.println(a.id());
-		}
 		//群发，服务端向每个连接上来的客户端群发消息
 		NettyConfig.group.writeAndFlush(new TextWebSocketFrame("vvvv"));
+		
+		UserApp u = UserGroup.getUsers(user.getAppId(), user.getUserId());
+		if (u == null) {
+			u=new UserApp();
+			u.setUserId(user.getUserId());
+			u.setAppId(user.getAppId());
+			u.setChannelId(ctx.channel().id());
+			u.setChannelIdList(ctx.channel().id());
+			UserGroup.addUsers(u);
+		} else {
+			u.setChannelId(ctx.channel().id());
+			u.setChannelIdList(ctx.channel().id());
+
+		}
+		tempUser=u;
+		System.out.println("channel个数。。"+NettyConfig.group.size());
+		for(Channel a:NettyConfig.group){
+			System.out.println(a.id());
+		}
+		System.out.println("appid个数。。"+NettyConfig.appUsers.size());
+		for( String key:NettyConfig.appUsers.keySet()){
+			System.out.println("key:"+key);
+			for(String key1:NettyConfig.appUsers.get(key).keySet()){
+				System.out.println("key1:"+key1);
+				UserApp xx = NettyConfig.appUsers.get(key).get(key1);
+				List<ChannelId> cc = xx.getChannelIdList();
+				for(ChannelId c:cc){
+					System.out.println("ChannelId..."+c);
+				}
+			}
+			/*for(ChannelId x:s.getChannelIds()){
+				System.out.println(x);
+			}*/
+		}
 //		NettyConfig.group.writeAndFlush(tws);
 	}
 
