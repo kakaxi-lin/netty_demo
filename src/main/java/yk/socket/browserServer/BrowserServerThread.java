@@ -14,22 +14,23 @@ import io.netty.handler.stream.ChunkedWriteHandler;
 
 import java.net.InetSocketAddress;
 
-public class BrowserServer {
-
+public class BrowserServerThread implements Runnable{
+	EventLoopGroup bossGroup=null;
+	EventLoopGroup workerGroup=null;
     private int port;
 
-    public BrowserServer(int port) {
+    public BrowserServerThread(int port) {
         this.port = port;
     }
 
-    public void start() {
+    public void run() {
 
     // netty服务端ServerBootstrap启动的时候,默认有两个eventloop分别是bossGroup和 workGroup 
 
-        EventLoopGroup bossGroup = new NioEventLoopGroup();   // bossGroup
+        EventLoopGroup boosGroup = new NioEventLoopGroup();   // bossGroup
         EventLoopGroup workerGroup = new NioEventLoopGroup();  // workGroup
         try {
-            ServerBootstrap sbs = new ServerBootstrap().group(bossGroup, workerGroup)
+            ServerBootstrap sbs = new ServerBootstrap().group(boosGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .localAddress(new InetSocketAddress(port))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
@@ -45,18 +46,16 @@ public class BrowserServer {
             System.out.println("Server start listen at " + port);
             future.channel().closeFuture().sync();
         } catch (Exception e) {
-        	bossGroup.shutdownGracefully();
+            boosGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }
     }
 
-    public static void main(String[] args) throws Exception {
-        int port;
-        if (args.length > 0) {
-            port = Integer.parseInt(args[0]);
-        } else {
-            port = 8888;
-        }
-        new BrowserServer(port).start();
-    }
+    public void shutdown() {
+		if (bossGroup != null)
+			bossGroup.shutdownGracefully();
+		if (workerGroup != null)
+			workerGroup.shutdownGracefully();
+	}
+	
 }

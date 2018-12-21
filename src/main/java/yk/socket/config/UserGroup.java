@@ -29,9 +29,9 @@ public class UserGroup {
 	}
 	
 	public static void removeUsers(UserApp u) {
-		System.out.println(u.getAppId());
+		/*System.out.println(u.getAppId());
 		System.out.println(u.getUserId());
-		System.out.println(u.getChannelId());
+		System.out.println(u.getChannelId());*/
 		ConcurrentMap<String, UserApp> cm = NettyConfig.appUsers.get(u.getAppId());
 		if (cm == null) {
 			return;

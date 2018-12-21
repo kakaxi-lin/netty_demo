@@ -1,14 +1,14 @@
-package yk.socket;
+package yk.socket.webClient;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
-public class ClientHandler extends ChannelInboundHandlerAdapter {
+public class WebClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("Client01Handler Active");
-        ctx.fireChannelActive();  // 若把这一句注释掉将无法将event传递给下一个ClientHandler
+//        ctx.fireChannelActive();  // 若把这一句注释掉将无法将event传递给下一个ClientHandler
 }
 
     @Override
@@ -16,9 +16,4 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("Client01Handler read Message: "+msg);
     }
 
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
-        ctx.close();
-    }
 }

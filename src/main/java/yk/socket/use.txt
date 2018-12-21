@@ -1,0 +1,16 @@
+1.直接与网页websocket直接交互的
+BrowserServer 是 可以直接运行的程序
+BrowserServerThread 是项目中运行的线程程序
+上面两个都是用来 
+
+2.web端服务器端
+WebServer 是 可以直接运行的程序
+WebServerThread 是项目中运行的线程程序
+
+3.web端客户端
+WebClient 是 可以直接运行的程序
+
+运行方法：
+启动项目-->打开四个websocket页面-->运行WebClient 
+可以看见根据WebClient中设置的 appId、userId向页面推送 对应的消息
+可实现 对应权限之内的信息推送功能

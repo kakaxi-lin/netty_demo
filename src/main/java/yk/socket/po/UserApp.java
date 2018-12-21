@@ -16,7 +16,9 @@ public class UserApp {
 	}
 
 	public void setChannelIdList(ChannelId channelId) {
-		this.channelIdList.add(channelId);
+		if(!channelIdList.contains(channelId)){
+			this.channelIdList.add(channelId);
+		}
 	}
 
 	public List<ChannelId> getChannelIdList() {
