@@ -117,7 +117,7 @@ public class BrowserServerHandler extends ChannelInboundHandlerAdapter {
 //		ctx.writeAndFlush(tws);
 		System.out.println("当前channel_id:"+ctx.channel().id());
 		//群发，服务端向每个连接上来的客户端群发消息
-		NettyConfig.group.writeAndFlush(new TextWebSocketFrame("vvvv"));
+//		NettyConfig.group.writeAndFlush(new TextWebSocketFrame("vvvv"));
 		
 		UserApp u = UserGroup.getUsers(user.getAppId(), user.getUserId());
 		if (u == null) {

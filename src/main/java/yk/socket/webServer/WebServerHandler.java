@@ -1,8 +1,5 @@
 package yk.socket.webServer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -26,12 +23,10 @@ public class WebServerHandler extends ChannelInboundHandlerAdapter {
 
 		System.out.println("客户端消息: " + msg);
 		BaseMsg baseMsg = JSON.parseObject(msg.toString(), BaseMsg.class);
-
 		//        ctx.writeAndFlush("哈哈笑");
 		for (String userid : baseMsg.getUserList()) {
 			System.out.println(userid);
 			if (UserGroup.getUsers(baseMsg.getAppId(), userid) != null) {
-				System.out.println("bcccc...");
 				for (ChannelId id : NettyConfig.appUsers.get(baseMsg.getAppId()).get(userid).getChannelIdList()) {
 					System.out.println(id);
 					Channel c = NettyConfig.group.find(id);
